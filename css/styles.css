@@ -12,6 +12,8 @@
   --additional-color: #ffffff;
   --header-border-color: #e7e9fc;
   --lgdt-hero: linear-gradient(rgba(46, 47, 66, 0.7), rgba(46, 47, 66, 0.7));
+  --hover-transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --modal-bg-color: #fcfcfc;
 }
 
 p,
@@ -107,6 +109,8 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--dark-color);
+  transition: color var(--hover-transition);
+  position: relative;
 }
 .header-link:hover,
 .header-link:focus,
@@ -116,7 +120,18 @@ body {
 .header-link:active {
   color: var(--pressed-state-color);
 }
-
+.current::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  left: 0;
+  bottom: -27px;
+  background-color: var(--pressed-state-color);
+  pointer-events: none;
+}
 .header-address {
   font-style: normal;
 }
@@ -131,6 +146,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text-color);
+  transition: color var(--hover-transition);
 }
 .header-address-link:hover,
 .header-address-link:focus {
@@ -174,10 +190,11 @@ body {
   padding: 16px 32px;
   border: none;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  transition: background-color var(--hover-transition);
 }
 .hero-btn:hover,
 .hero-btn:focus {
-  background: var(--pressed-state-color);
+  background-color: var(--pressed-state-color);
 }
 
 /*--------------------FEATURES---------------------*/
@@ -300,6 +317,7 @@ body {
   justify-content: center;
   align-items: center;
   background-color: var(--primary-brand-color);
+  transition: background-color var(--hover-transition);
 }
 .team-soc-link:is(:hover, :focus) {
   background-color: var(--pressed-state-color);
@@ -342,6 +360,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color var(--hover-transition);
 }
 .customers-link:is(:hover, :focus) {
   border-color: var(--pressed-state-color);
@@ -353,6 +372,7 @@ body {
 
 .customers-icon {
   fill: var(--subtle-text-color);
+  transition: fill var(--hover-transition);
 }
 
 /*--------------------FOOTER---------------------*/
@@ -414,12 +434,14 @@ body {
   justify-content: center;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
+  transition-property: background-color;
+  transition: background-color var(--hover-transition);
 }
 .footer-soc-icon {
 }
 
 .footer-soc-link:is(:hover, :focus) {
-  background-color: #31d0aa;
+  background-color: var(--success-color);
 }
 
 /*-------------------------------PORTFOLIO-----------------------------------------*/
@@ -447,12 +469,15 @@ body {
   border: 1px solid var(--accent-color);
   border-radius: 4px;
   padding: 12px 24px;
+  transition: color var(--hover-transition),
+    background-color var(--hover-transition), box-shadow var(--hover-transition),
+    border var(--hover-transition);
 }
 
 .portfolio-item-btn:hover,
 .portfolio-item-btn:focus {
   color: var(--additional-color);
-  background: var(--pressed-state-color);
+  background-color: var(--pressed-state-color);
   box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1), 0px 2px 1px rgba(0, 0, 0, 0.08),
     0px 2px 2px rgba(0, 0, 0, 0.12);
   border: 1px solid var(--pressed-state-color);
@@ -468,6 +493,7 @@ body {
 
 .portfolio-box-link {
   display: block;
+  transition: box-shadow var(--hover-transition);
 }
 
 .portfolio-box-link:is(:hover, :focus) {
@@ -475,12 +501,34 @@ body {
     0px 1px 1px rgba(46, 47, 66, 0.16), 0px 2px 1px rgba(46, 47, 66, 0.08);
 }
 
+.portfolio-box-link:hover .portfolio-cover-text {
+  transform: translateY(0);
+}
+.portfolio-cover-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-cover-text {
+  position: absolute;
+  top: 0;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--light-color);
+  background-color: var(--primary-brand-color);
+  padding: 40px 32px;
+  height: 100%;
+  transform: translateY(100%);
+  transition: transform var(--hover-transition);
+  overflow: auto;
+}
 .portfolio-box-wrap {
   padding-top: 32px;
   padding-bottom: 32px;
   padding-left: 16px;
   border: 1px solid var(--header-border-color);
-  border-top-width: none;
 }
 
 .portfolio-box-item-title {
@@ -495,4 +543,46 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text-color);
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(46, 47, 66, 0.4);
+  transition: opacity 300ms linear, visibility 300ms linear;
+}
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) skew(0);
+  width: 408px;
+  min-height: 576px;
+  background-color: var(--modal-bg-color);
+  padding: 24px;
+  transition: transform 300ms linear;
+}
+.backdrop.is-hidden .modal {
+  transform: translate(-50%, -50%) skew(90deg);
+}
+
+.modal-close {
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 0;
+}
+
+.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
